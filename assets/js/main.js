@@ -190,7 +190,14 @@
     var config = formId === "modal" ? modalConfig : "";
     track("form_submit", { form_id: formId, intent: intent, configuration: config || "not_specified" });
 
-    if (submitted) { showSuccess(form, v.name, true, intent); return; }
+    // Only skip a repeat of the exact same number in this browser session (a double click or
+    // a second form on the page). A different number, e.g. a corrected typo, is sent as a new lead.
+    var fullPhone = v.cc + v.digits;
+    if (submitted && ss("ss_lead_phone") === fullPhone) {
+      track("form_duplicate", { form_id: formId });
+      if (CFG.thankYouUrl) location.assign(CFG.thankYouUrl); else showSuccess(form, v.name, true, intent);
+      return;
+    }
 
     if (!CFG.leadEndpoint) {
       console.warn("[Florique] SS_CONFIG.leadEndpoint is empty, so the lead was NOT sent. Configure it in assets/js/config.js.");
@@ -248,7 +255,7 @@
       throw err;
     }).then(function () {
       clearTimeout(timer);
-      submitted = true; ss("ss_lead", "1"); unlockPlans();
+      submitted = true; ss("ss_lead", "1"); ss("ss_lead_phone", payload.phone); unlockPlans();
       track("lead_submit_success", { form_id: formId, intent: intent, configuration: config || "not_specified" });
       if (CFG.thankYouUrl) location.assign(CFG.thankYouUrl);
       else showSuccess(form, v.name, false, intent);
