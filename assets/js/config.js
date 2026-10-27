@@ -10,7 +10,7 @@ window.SS_CONFIG = {
    * and offers the phone number instead of showing a fake success message. */
   leadEndpoint: "https://connect.pabbly.com/webhook-listener/webhook/IjU3NjUwNTY1MDYzNTA0MzY1MjZjNTUzNyI_3D_pc/IjU3NjcwNTZiMDYzNzA0MzU1MjY4NTUzZDUxMzUi_pc",
 
-  /* "form" = form-encoded POST in no-cors mode (Pabbly Connect webhook listener).
+  /* "form" = form-encoded POST, reply checked for {"status":"success"} (Pabbly Connect webhook).
    * "json" = JSON body with a readable response (own API / Vercel function). */
   leadEndpointFormat: "form",
 
