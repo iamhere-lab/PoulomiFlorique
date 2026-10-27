@@ -1,0 +1,3 @@
+# brochure source files and extraction workspace (large, not part of the site)
+src/
+.DS_Store
