@@ -15,7 +15,7 @@ Static site, no build step. Open `index.html` or deploy the folder as-is (Vercel
 - `assets/img/` — renders, plans, florals and logos extracted from the developer brochure
 
 ## Before launch (`assets/js/config.js`)
-- `leadEndpoint` — POST URL for leads (Pabbly / Apps Script / Leadrat proxy). Forms refuse to submit until set.
+- `leadEndpoint` — set to the Pabbly Connect webhook; leads are sent as form fields (`leadEndpointFormat: "form"`).
 - `phoneDisplay` / `phoneE164` — set to +91 74069 17711.
 - `whatsappNumber`, `gtmId`, `agentRera`, `privacyUrl`, `siteUrl`
 

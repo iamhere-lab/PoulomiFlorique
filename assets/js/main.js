@@ -222,14 +222,17 @@
     var controller = "AbortController" in window ? new AbortController() : null;
     var timer = setTimeout(function () { if (controller) controller.abort(); }, 15000);
 
-    fetch(CFG.leadEndpoint, {
-      method: "POST",
-      headers: { "Content-Type": CFG.leadEndpointSimpleRequest ? "text/plain;charset=utf-8" : "application/json" },
-      body: JSON.stringify(payload),
-      signal: controller ? controller.signal : undefined
-    }).then(function (res) {
+    // "form" mode (Pabbly and other webhook catchers): a plain form-encoded POST sent with
+    // mode "no-cors", so no cross-site preflight is needed. The response is opaque, so a
+    // resolved request counts as delivered; only a network failure shows the error.
+    var formMode = CFG.leadEndpointFormat === "form";
+    var req = formMode
+      ? { method: "POST", mode: "no-cors", body: new URLSearchParams(payload), keepalive: true }
+      : { method: "POST", headers: { "Content-Type": CFG.leadEndpointSimpleRequest ? "text/plain;charset=utf-8" : "application/json" }, body: JSON.stringify(payload) };
+    if (controller) req.signal = controller.signal;
+    fetch(CFG.leadEndpoint, req).then(function (res) {
       clearTimeout(timer);
-      if (!res.ok) throw new Error("HTTP " + res.status);
+      if (!formMode && !res.ok) throw new Error("HTTP " + res.status);
       submitted = true; ss("ss_lead", "1"); unlockPlans();
       track("lead_submit_success", { form_id: formId, intent: intent, configuration: config || "not_specified" });
       if (CFG.thankYouUrl) location.assign(CFG.thankYouUrl);
