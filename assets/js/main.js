@@ -248,8 +248,8 @@
     status.className = "form-status is-error";
     status.textContent = lead;
     var a = document.createElement("a");
-    a.href = "tel:" + (CFG.phoneE164 || "+919119239119");
-    a.textContent = CFG.phoneDisplay || "91192 39119";
+    a.href = "tel:" + (CFG.phoneE164 || "+917406917711");
+    a.textContent = CFG.phoneDisplay || "74069 17711";
     a.setAttribute("data-cta", "form_error_call");
     status.appendChild(a);
     status.appendChild(document.createTextNode("."));

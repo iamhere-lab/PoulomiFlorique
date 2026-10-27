@@ -16,7 +16,7 @@ Static site, no build step. Open `index.html` or deploy the folder as-is (Vercel
 
 ## Before launch (`assets/js/config.js`)
 - `leadEndpoint` — POST URL for leads (Pabbly / Apps Script / Leadrat proxy). Forms refuse to submit until set.
-- `phoneDisplay` / `phoneE164` — currently the official Florique sales line; swap for the tracking number.
+- `phoneDisplay` / `phoneE164` — set to +91 74069 17711.
 - `whatsappNumber`, `gtmId`, `agentRera`, `privacyUrl`, `siteUrl`
 
 Pricing shown (₹2.22 Cr*, 1,780 sq ft 3 BHK) is indicative; areas are SBUA from the developer brochure.

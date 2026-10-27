@@ -20,12 +20,11 @@ window.SS_CONFIG = {
   /* Google Tag Manager container, e.g. "GTM-XXXXXXX". Loaded only when set. */
   gtmId: "",
 
-  /* Phone shown on the page. Official Florique sales line; replace with the
-   * channel-partner tracking number before launch. */
-  phoneDisplay: "91192 39119",
-  phoneE164: "+919119239119",
+  /* Phone shown on the page (sales / channel-partner number). */
+  phoneDisplay: "74069 17711",
+  phoneE164: "+917406917711",
 
-  /* WhatsApp number, digits only with country code, e.g. "919119239119".
+  /* WhatsApp number, digits only with country code, e.g. "917406917711".
    * All WhatsApp buttons stay hidden until this is set. Confirm the number is on WhatsApp. */
   whatsappNumber: "",
   whatsappMessage: "Hi, I'm interested in Poulomi Florique, Thanisandra. Please share the price sheet and floor plans.",
