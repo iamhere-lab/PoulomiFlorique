@@ -82,9 +82,28 @@
   /* ---------- lead forms ---------- */
   var tpl = document.getElementById("lead-form-tpl");
 
+  /* Rejects obviously fake numbers: one or two distinct digits (9999999999, 9090909090),
+   * long runs of one digit (9000000001), straight sequences (9876543210, 6789012345)
+   * and repeated blocks (9898989898, 9876598765). */
+  function isJunkNumber(d) {
+    var distinct = {}; for (var i = 0; i < d.length; i++) distinct[d.charAt(i)] = 1;
+    if (Object.keys(distinct).length <= 2) return true;
+    if (/(\d)\1{6,}/.test(d)) return true;
+    var up = "01234567890123456789", down = "98765432109876543210";
+    if (up.indexOf(d) > -1 || down.indexOf(d) > -1) return true;
+    for (var n = 1; n <= d.length / 2; n++) {
+      if (d.length % n) continue;
+      if (d.slice(0, n).repeat(d.length / n) === d) return true;
+    }
+    return false;
+  }
   function phoneValid(cc, digits) {
-    if (cc === "+91") return /^[6-9]\d{9}$/.test(digits);
-    return /^\d{6,14}$/.test(digits);
+    var ok = cc === "+91" ? /^[6-9]\d{9}$/.test(digits) : /^\d{6,14}$/.test(digits);
+    return ok && !isJunkNumber(digits);
+  }
+  function emailValid(e) {
+    if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(e)) return false;
+    return !/@(example|test|abc|xyz|asdf|email|mail)\.(com|in|org)$/i.test(e);
   }
   function setError(form, name, msg) {
     var input = form.querySelector('[name="' + name + '"]');
@@ -102,10 +121,10 @@
     if (cc === "+91" && digits.length === 11 && digits.charAt(0) === "0") digits = digits.slice(1);
     if (name.length < 2 || !/[A-Za-zऀ-ൿ]/.test(name)) { setError(form, "name", "Please enter your name."); ok = false; first = first || form.elements.name; }
     else setError(form, "name", "");
-    if (!phoneValid(cc, digits)) { setError(form, "phone", cc === "+91" ? "Please enter a valid 10-digit Indian mobile number (starting 6–9)." : "Please enter a valid mobile number."); ok = false; first = first || form.elements.phone; }
+    if (!phoneValid(cc, digits)) { setError(form, "phone", cc === "+91" ? "Please enter your real 10-digit mobile number (starting 6–9)." : "Please enter your real mobile number."); ok = false; first = first || form.elements.phone; }
     else setError(form, "phone", "");
     var email = form.elements.email.value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { setError(form, "email", "Please enter a valid email address."); ok = false; first = first || form.elements.email; }
+    if (email && !emailValid(email)) { setError(form, "email", "Please check the email address, or leave it blank."); ok = false; first = first || form.elements.email; }
     else setError(form, "email", "");
     if (!form.elements.consent.checked) { setError(form, "consent", "Please tick the box so the sales team can contact you."); ok = false; first = first || form.elements.consent; }
     else setError(form, "consent", "");
@@ -137,7 +156,9 @@
       track("form_start", { form_id: formId });
     });
     form.elements.phone.addEventListener("input", function (e) {
-      var v = e.target.value.replace(/[^\d\s+\-()]/g, ""); if (v !== e.target.value) e.target.value = v;
+      var v = e.target.value.replace(/[^\d\s]/g, "");
+      if (form.elements.cc.value === "+91") { var dg = v.replace(/\D/g, ""); if (dg.length > 10) v = dg.slice(-10); }
+      if (v !== e.target.value) e.target.value = v;
     });
     form.addEventListener("submit", function (e) { e.preventDefault(); handleSubmit(form, formId); });
     return form;
@@ -182,7 +203,7 @@
       project: "Poulomi Florique",
       name: v.name,
       phone: v.cc + v.digits,
-      email: v.email,
+      email: v.email || "",
       country_code: v.cc,
       configuration: config,
       intent: intent,
