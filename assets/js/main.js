@@ -68,7 +68,7 @@
   var INTENTS = {
     general:    { title: "Unlock price & floor plans", button: "Get Price Sheet & Floor Plans" },
     price:      { title: "Get the complete price sheet", button: "Send Me the Price Sheet" },
-    brochure:   { title: "Download the brochure",    button: "Get Brochure" },
+    brochure:   { title: "Download the brochure",    button: "Download Brochure" },
     floor_plan: { title: "Download the floor plans", button: "Send Me the Floor Plans" },
     site_visit: { title: "Book your private site visit", button: "Reserve My Visit Slot" }
   };
@@ -167,7 +167,7 @@
   function intentFor(formId) {
     if (formId === "modal") return modalIntent;
     if (formId === "hero" || formId === "hero-m") return "site_visit";
-    if (formId === "inline") return "general";
+    if (formId === "inline") return "brochure";
     return "general";
   }
 

@@ -553,3 +553,6 @@ html:not(.ss-editing) [data-edit]:empty { display: none; }
   .site-nav { display: flex; gap: 26px; align-items: center; }
   .menu-btn { display: none; }
 }
+
+/* sticky bar: longer label fits on small phones */
+@media (max-width: 380px) { .action-bar > * { font-size: 12px; letter-spacing: .5px; } }
