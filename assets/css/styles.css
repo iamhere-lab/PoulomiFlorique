@@ -556,3 +556,15 @@ html:not(.ss-editing) [data-edit]:empty { display: none; }
 
 /* sticky bar: longer label fits on small phones */
 @media (max-width: 380px) { .action-bar > * { font-size: 12px; letter-spacing: .5px; } }
+
+/* ---------- thank-you page: centred layout ---------- */
+.ty > .wrap { display: flex; justify-content: center; }
+.ty-card { margin: 0 auto; }
+.ty-card .display { font-size: clamp(30px, 4vw, 46px); text-wrap: balance; }
+.ty-card .display::after { margin-left: auto; margin-right: auto; }
+.ty-steps { margin-left: auto; margin-right: auto; }
+.ty-plans { text-align: center; }
+.ty-grid figure { display: flex; flex-direction: column; }
+.ty-grid button { aspect-ratio: 4 / 5; display: grid; place-items: center; padding: 10px; }
+.ty-grid button img { width: 100%; height: 100%; object-fit: contain; }
+.ty-grid figcaption { flex: 1; text-align: center; }
