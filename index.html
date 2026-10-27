@@ -413,12 +413,11 @@
       </div>
       <p class="err" id="tpl-phone-err" aria-live="polite"></p>
     </div>
-    <fieldset class="field chips">
-      <legend>Interested in <span class="opt">(optional)</span></legend>
-      <label><input type="radio" name="configuration" value="3 BHK"><span>3 BHK · 1,780 – 2,030 sq ft</span></label>
-      <label><input type="radio" name="configuration" value="3 BHK + Maid"><span>3 BHK + Maid · 2,210 – 2,535 sq ft</span></label>
-      <label><input type="radio" name="configuration" value="3 BHK + Study + Maid"><span>3 BHK + Study + Maid · 2,740 sq ft</span></label>
-    </fieldset>
+    <div class="field">
+      <label for="tpl-email" class="sr-only">Email</label>
+      <input id="tpl-email" name="email" type="email" inputmode="email" autocomplete="email" required maxlength="120" placeholder="Email">
+      <p class="err" id="tpl-email-err" aria-live="polite"></p>
+    </div>
     <div class="hp" aria-hidden="true">
       <label for="tpl-company">Company</label>
       <input id="tpl-company" name="company" type="text" tabindex="-1" autocomplete="off">
