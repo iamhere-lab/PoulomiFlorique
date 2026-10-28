@@ -17,6 +17,8 @@ Static site, no build step. Open `index.html` or deploy the folder as-is (Vercel
 ## Before launch (`assets/js/config.js`)
 - `leadEndpoint` — set to the Pabbly Connect webhook; leads are sent as form fields (`leadEndpointFormat: "form"`).
 - `phoneDisplay` / `phoneE164` — set to +91 74069 17711.
-- `whatsappNumber`, `gtmId`, `agentRera`, `privacyUrl`, `siteUrl`
+- `whatsappNumber`, `gtmId`, `privacyUrl`, `siteUrl`
+
+Channel partner: Buildnest Realty Pvt Ltd · Agent RERA PRM/KA/RERA/1251/446/AG/210729/002406 (footer and disclaimer).
 
 Pricing shown (₹2.22 Cr*, 1,780 sq ft 3 BHK) is indicative; areas are SBUA from the developer brochure.

@@ -42,10 +42,10 @@ window.SS_CONFIG = {
   brochureUrl: "",
 
   /* Channel-partner / agent RERA number, shown in the footer when set. */
-  agentRera: "",
+  agentRera: "", /* shown in the footer markup directly: Buildnest Realty Pvt Ltd, PRM/KA/RERA/1251/446/AG/210729/002406 */
 
   /* Named in the consent line: who will contact the enquirer. Confirm before launch. */
-  consentEntity: "Poulomi Florique LLP, Poulomi Estates and their authorised sales partners",
+  consentEntity: "Buildnest Realty Pvt Ltd (authorised channel partner), Poulomi Florique LLP and Poulomi Estates",
 
   /* Final site URL for the canonical tag, e.g. "https://www.example.com/". Empty = use the live URL. */
   siteUrl: "",
