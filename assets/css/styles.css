@@ -585,3 +585,7 @@ html:not(.ss-editing) [data-edit]:empty { display: none; }
 }
 .brand-group { flex-shrink: 0; }
 @media (min-width: 1280px) and (max-width: 1599px) { .site-nav { gap: 18px; } .site-nav a { font-size: 13px; letter-spacing: .03em; } .brand-group { margin-right: 12px; } }
+
+/* footer credit line */
+.foot-credit { margin: 14px 0 0; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.14); font-size: 12.5px; color: #c6cfc8; letter-spacing: .02em; }
+.foot-credit strong { color: #fff; font-weight: 600; }
