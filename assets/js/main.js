@@ -481,7 +481,7 @@
     nav.addEventListener("click", function (e) { if (e.target.closest("a")) setMenu(false); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape" && menuBtn.getAttribute("aria-expanded") === "true") { setMenu(false); menuBtn.focus(); } });
     document.addEventListener("click", function (e) { if (!e.target.closest(".site-header")) setMenu(false); });
-    window.addEventListener("resize", function () { if (window.innerWidth >= 1100) setMenu(false); });
+    window.addEventListener("resize", function () { if (window.innerWidth >= 1280) setMenu(false); });
   }
 
   /* ---------- swipe rows ---------- */

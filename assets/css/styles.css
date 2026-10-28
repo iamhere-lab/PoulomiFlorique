@@ -539,7 +539,7 @@ html:not(.ss-editing) [data-edit]:empty { display: none; }
 .menu-btn[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .menu-btn[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
 .menu-btn[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-@media (max-width: 1099px) {
+@media (max-width: 1279px) {
   .site-header { position: sticky; }
   .site-nav { position: absolute; left: 0; right: 0; top: 100%; background: var(--beige); border-top: 1px solid rgba(255,255,255,.2); padding: 8px var(--gutter) 18px; flex-direction: column; box-shadow: 0 16px 30px -16px rgba(0,0,0,.5); }
   html.menu-open .site-nav { display: flex; }
@@ -549,8 +549,8 @@ html:not(.ss-editing) [data-edit]:empty { display: none; }
   .phone-pill { padding: 0 12px; font-size: 14px; }
   .phone-pill .flag { display: none; }
 }
-@media (min-width: 1100px) {
-  .site-nav { display: flex; gap: 26px; align-items: center; }
+@media (min-width: 1280px) {
+  .site-nav { display: flex; gap: 22px; align-items: center; }
   .menu-btn { display: none; }
 }
 
@@ -568,3 +568,20 @@ html:not(.ss-editing) [data-edit]:empty { display: none; }
 .ty-grid button { aspect-ratio: 4 / 5; display: grid; place-items: center; padding: 10px; }
 .ty-grid button img { width: 100%; height: 100%; object-fit: contain; }
 .ty-grid figcaption { flex: 1; text-align: center; }
+
+/* ---------- authorized channel partner badge beside the logo ---------- */
+.brand-group { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.cp-badge { display: block; padding-left: 14px; border-left: 1px solid rgba(255,255,255,.6); color: #fff; font-size: 11px; font-weight: 500; line-height: 1.3; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
+@media (min-width: 900px) { .brand-group { gap: 18px; } .cp-badge { padding-left: 18px; font-size: 12px; } }
+@media (max-width: 480px) { .brand-group { gap: 10px; } .cp-badge { padding-left: 10px; font-size: 9px; letter-spacing: .08em; } }
+
+.site-nav a, .phone-pill { white-space: nowrap; }
+@media (min-width: 1280px) and (max-width: 1439px) { .site-nav { gap: 16px; } .site-nav a { font-size: 13px; } }
+@media (max-width: 480px) {
+  .phone-pill { font-size: 12.5px; padding: 0 10px; min-height: 40px; }
+  .phone-pill .cc { display: none; }
+  .header-actions { gap: 6px; }
+  .menu-btn { width: 40px; height: 40px; }
+}
+.brand-group { flex-shrink: 0; }
+@media (min-width: 1280px) and (max-width: 1599px) { .site-nav { gap: 18px; } .site-nav a { font-size: 13px; letter-spacing: .03em; } .brand-group { margin-right: 12px; } }
