@@ -36,7 +36,7 @@ window.SS_CONFIG = {
 
   /* Auto-open the enquiry popup after this many seconds (once per session).
    * 0 disables auto-open; the popup still opens from every Enquire button. */
-  popupDelaySeconds: 10,
+  popupDelaySeconds: 25,
 
   /* Optional public brochure URL. If set, a download link is shown after a successful
    * "Download Brochure" enquiry. Leave empty and the sales team sends it instead. */
