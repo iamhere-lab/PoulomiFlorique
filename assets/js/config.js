@@ -21,7 +21,8 @@ window.SS_CONFIG = {
    * Leave empty to show the inline success message (which also unlocks the floor plans). */
   thankYouUrl: "thank-you.html",
 
-  /* Google Tag Manager container, e.g. "GTM-XXXXXXX". Loaded only when set. */
+  /* GTM-5QRXDHWH is hard-coded right after <head> in index.html and thank-you.html.
+   * Leave this empty or the container loads twice. */
   gtmId: "",
 
   /* Phone shown on the page (sales / channel-partner number). */
