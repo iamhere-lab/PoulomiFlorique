@@ -19,6 +19,29 @@
     } catch (e) { return null; }
   }
 
+  /* Leads already sent from this browser, kept for LEAD_TTL_DAYS across tabs and return visits
+   * (sessionStorage alone forgets them in every new tab, which caused repeat enquiries). */
+  var LEAD_TTL_DAYS = 30;
+  var LEADS_KEY = "flq_leads";
+  function sentLeads() {
+    var list = [];
+    try { list = JSON.parse(localStorage.getItem(LEADS_KEY) || "[]") || []; } catch (e) { list = []; }
+    var cutoff = Date.now() - LEAD_TTL_DAYS * 864e5;
+    return list.filter(function (l) { return l && l.phone && l.at > cutoff; });
+  }
+  function rememberLead(phone, id) {
+    var list = sentLeads().filter(function (l) { return l.phone !== phone; });
+    list.push({ phone: phone, id: id, at: Date.now() });
+    try { localStorage.setItem(LEADS_KEY, JSON.stringify(list.slice(-5))); } catch (e) {}
+  }
+  function alreadySent(phone) {
+    return sentLeads().some(function (l) { return l.phone === phone; });
+  }
+  function newLeadId() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return "flq-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10);
+  }
+
   /* ---------- config-driven content ---------- */
   if (CFG.phoneE164) document.querySelectorAll(".js-phone").forEach(function (a) { a.href = "tel:" + CFG.phoneE164; });
   if (CFG.phoneDisplay) {
@@ -60,7 +83,9 @@
 
   /* ---------- state ---------- */
   var pageLoadedAt = Date.now();
-  var submitted = ss("ss_lead") === "1"; // one lead per session
+  var submitted = ss("ss_lead") === "1" || sentLeads().length > 0; // this browser already sent a lead
+  var inFlight = false; // one submission at a time across every form on the page
+  var pendingIds = {};  // phone -> lead_id, reused if the same lead is retried after an error
   var anyFormStarted = false;
   var modalIntent = "general";
   var modalConfig = ""; // unit type from the button that opened the popup (e.g. a floor-plan card)
@@ -174,7 +199,7 @@
   function handleSubmit(form, formId) {
     var btn = form.querySelector('button[type="submit"]');
     var status = form.querySelector(".form-status");
-    if (btn.disabled) return;
+    if (btn.disabled || inFlight) return;
     status.textContent = ""; status.className = "form-status";
 
     var v = validate(form);
@@ -190,14 +215,17 @@
     var config = formId === "modal" ? modalConfig : "";
     track("form_submit", { form_id: formId, intent: intent, configuration: config || "not_specified" });
 
-    // Only skip a repeat of the exact same number in this browser session (a double click or
-    // a second form on the page). A different number, e.g. a corrected typo, is sent as a new lead.
+    // Skip a repeat of a number already sent from this browser in the last 30 days (another tab,
+    // a return visit, the popup after the inline form). A different number is sent as a new lead.
     var fullPhone = v.cc + v.digits;
-    if (submitted && ss("ss_lead_phone") === fullPhone) {
+    if (alreadySent(fullPhone) || (submitted && ss("ss_lead_phone") === fullPhone)) {
       track("form_duplicate", { form_id: formId });
-      if (CFG.thankYouUrl) location.assign(CFG.thankYouUrl); else showSuccess(form, v.name, true, intent);
+      if (CFG.thankYouUrl) location.replace(CFG.thankYouUrl); else showSuccess(form, v.name, true, intent);
       return;
     }
+    // One id per lead, reused by the automatic retry and by a manual retry after an error, so
+    // Pabbly / the CRM can drop a second copy if the first one actually got through.
+    var leadId = pendingIds[fullPhone] || (pendingIds[fullPhone] = newLeadId());
 
     if (!CFG.leadEndpoint) {
       console.warn("[Florique] SS_CONFIG.leadEndpoint is empty, so the lead was NOT sent. Configure it in assets/js/config.js.");
@@ -207,6 +235,7 @@
     }
 
     var payload = {
+      lead_id: leadId,
       project: "Poulomi Florique",
       name: v.name,
       phone: v.cc + v.digits,
@@ -223,7 +252,7 @@
     };
     ATTR_KEYS.concat(["landing_page", "referrer"]).forEach(function (k) { if (attribution[k]) payload[k] = attribution[k]; });
 
-    btn.disabled = true;
+    btn.disabled = true; inFlight = true;
     var label = btn.textContent;
     btn.textContent = "Sending…";
     var controller = "AbortController" in window ? new AbortController() : null;
@@ -256,14 +285,16 @@
     }).then(function () {
       clearTimeout(timer);
       submitted = true; ss("ss_lead", "1"); ss("ss_lead_phone", payload.phone); unlockPlans();
+      rememberLead(payload.phone, leadId); delete pendingIds[fullPhone]; inFlight = false;
       track("lead_submit_success", { form_id: formId, intent: intent, configuration: config || "not_specified" });
-      if (CFG.thankYouUrl) location.assign(CFG.thankYouUrl);
+      // replace() so the Back button doesn't land on the filled form again
+      if (CFG.thankYouUrl) location.replace(CFG.thankYouUrl);
       else showSuccess(form, v.name, false, intent);
     }).catch(function (err) {
       clearTimeout(timer);
       console.error("[Florique] lead submit failed", err);
       track("lead_submit_error", { form_id: formId, reason: "network_or_server" });
-      btn.disabled = false; btn.textContent = label;
+      btn.disabled = false; btn.textContent = label; inFlight = false;
       showError(form, "Something went wrong sending your details. Please try again, or call ");
     });
   }
@@ -289,7 +320,7 @@
     var h = document.createElement("h4"); h.textContent = "Thank you, " + first + ".";
     var p = document.createElement("p");
     p.textContent = repeat
-      ? "We already have your details from this visit. The Poulomi Florique sales team will be in touch."
+      ? "We already have your details. The Poulomi Florique sales team will be in touch."
       : "We've received your details. The Poulomi Florique sales team will contact you shortly.";
     box.appendChild(tick); box.appendChild(h); box.appendChild(p);
     if (intent === "floor_plan") {
